@@ -23,13 +23,13 @@
                         display: ['Manuka', 'Oswald', 'sans-serif'],
                     },
                     colors: {
-                        earth: "#6B3F24",
-                        forest: "#1F3A2E",
-                        lilac: "#D8D1DA",
-                        amber: "#E07A2F",
-                        cream: "#F4F1EC",
-                        metal: "#B6B6B6",
-                        black: "#111111",
+                        earth: "#6B3F24",      // Brun Terre / Cognac (Officiel)
+                        forest: "#1F3A2E",     // Vert Forêt (Officiel)
+                        lilac: "#D8D1DA",      // Lilas (Officiel)
+                        amber: "#E07A2F",      // Orange Brûlé (Officiel)
+                        cream: "#F4F1EC",      // Blanc Cassé (Officiel)
+                        metal: "#B6B6B6",      // Inox (Officiel)
+                        black: "#111111",      // Structure (Officiel)
                     },
                     backgroundImage: {
                         'noise': "url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.8%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22 opacity=%220.07%22/%3E%3C/svg%3E')",
@@ -98,7 +98,7 @@
                 0 10px 20px rgba(0,0,0,0.5);
         }
 
-        /* --- PILLAR 3D CSS (From V2) --- */
+        /* --- PILLAR 3D CSS --- */
         .pillar-shaft {
             background: linear-gradient(90deg, #0a0a0a 0%, #2a2a2a 20%, #1a1a1a 45%, #3a3a3a 50%, #1a1a1a 55%, #2a2a2a 80%, #0a0a0a 100%);
             box-shadow: inset 0 0 50px rgba(0,0,0,0.8);
@@ -155,7 +155,7 @@
 
         // --- COMPONENTS ---
         const Button = ({ children, onClick, className, variant = "primary" }) => {
-            const base = "relative overflow-hidden inline-flex items-center justify-center px-12 py-5 text-xs font-semibold tracking-widest transition-all duration-300 border font-sans cursor-pointer uppercase rounded-none group z-10";
+            const base = "relative overflow-hidden inline-flex items-center justify-center px-8 md:px-12 py-4 md:py-5 text-xs font-semibold tracking-widest transition-all duration-300 border font-sans cursor-pointer uppercase rounded-none group z-10";
             const styles = {
                 primary: "bg-amber text-cream border-amber hover:bg-earth hover:border-earth hover:text-white",
                 outline: "bg-transparent text-cream border-white/20 hover:border-amber hover:text-amber",
@@ -281,7 +281,7 @@
                     <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-earth/80 to-black z-10"></div>
                     <div className="absolute inset-0 opacity-20 bg-[url('https://images.unsplash.com/photo-1542259646-173663b65261?q=80&w=2544&auto=format&fit=crop')] bg-cover bg-center mix-blend-overlay"></div>
                     
-                    <div className="relative z-20 text-center w-full max-w-6xl px-4 flex flex-col items-center justify-center h-full">
+                    <div className="relative z-20 text-center w-full max-w-5xl px-4 flex flex-col items-center justify-center h-full">
                         <Reveal>
                             <div className="mb-8 md:mb-12 inline-flex items-center gap-3 border border-amber/30 bg-black/30 backdrop-blur-md px-6 py-2 rounded-full">
                                 <span className="w-1.5 h-1.5 bg-amber rounded-full animate-pulse shadow-[0_0_10px_#E07A2F]"></span>
@@ -290,16 +290,16 @@
                         </Reveal>
 
                         <Reveal delay={0.2}>
-                            {/* UPDATED TEXT */}
-                            <h1 className="text-6xl sm:text-8xl md:text-[10rem] text-cream font-serif leading-[0.85] tracking-tightest mb-8 break-words drop-shadow-2xl">
-                                mooddigital.co
+                            <h1 className="text-4xl sm:text-6xl md:text-8xl text-cream font-serif leading-[1.1] tracking-tightest mb-8 break-words drop-shadow-2xl">
+                                Entre dans l’Ordre. <br/>
+                                <span className="italic text-lilac/80">Incarne ton business.</span>
                             </h1>
                         </Reveal>
 
                         <Reveal delay={0.4}>
                             <div className="h-px w-24 bg-gradient-to-r from-transparent via-amber/50 to-transparent mb-8"></div>
-                            <p className="text-lilac/80 font-serif italic text-xl md:text-2xl max-w-xl mx-auto mb-16 leading-relaxed">
-                                "Ni agence. Ni coaching. Un Ordre."
+                            <p className="text-lilac/80 font-sans font-light text-sm md:text-base max-w-xl mx-auto mb-16 leading-relaxed">
+                                Moodigital.co est un Ordre d’incarnation business où les entrepreneures conscientes viennent clarifier leur vision et déployer un business aligné, souverain et vivant.
                             </p>
                         </Reveal>
 
@@ -349,28 +349,76 @@
             </Reveal>
         );
 
+        const Manifesto = () => (
+            <section className="py-24 px-6 max-w-5xl mx-auto text-center">
+                 <Reveal>
+                    <div className="inline-flex items-center gap-2 mb-6 text-amber">
+                        <Star8 className="w-3 h-3" />
+                        <span className="font-manifesto text-[10px] tracking-manifesto uppercase">Le Manifeste</span>
+                        <Star8 className="w-3 h-3" />
+                    </div>
+                    <h2 className="text-4xl md:text-6xl font-serif text-cream mb-8 leading-tight">
+                        Moodigital évolue.<br/>
+                        Pas pour devenir plus gros.<br/>
+                        <span className="italic text-amber">Mais pour devenir plus juste.</span>
+                    </h2>
+                    <p className="text-lilac/80 font-sans font-light text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">
+                        Ce que je fais aujourd’hui, c’est accompagner des femmes à reprendre leur place, à incarner leur business, et à déployer sans se trahir.
+                        <br/><br/>
+                        Alors Moodigital devient un Ordre. Un cadre. Un espace de discernement.
+                    </p>
+                </Reveal>
+            </section>
+        );
+
+        const Testimonials = () => (
+            <section className="py-24 px-6 border-t border-white/5 bg-[#080808]">
+                <div className="max-w-[1400px] mx-auto">
+                    <div className="text-center mb-16">
+                        <h3 className="font-serif text-3xl md:text-4xl text-cream mb-4">Ce qu'elles en disent</h3>
+                        <p className="text-lilac/40 font-manifesto uppercase text-xs tracking-widest">Paroles de membres de l'Ordre</p>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        {[
+                            {
+                                text: "Je travaillais avec beaucoup d'intuition mais peu de structure. Anaïs m'a aidée à poser un cadre sans jamais dénaturer mon énergie.",
+                                author: "Entrepreneuse Holistique"
+                            },
+                            {
+                                text: "Moodigital.co n'est pas une agence de production de masse. C'est un partenaire stratégique qui comprend les enjeux humains et business.",
+                                author: "Cabinet d'esthétique"
+                            },
+                            {
+                                text: "Je pensais avoir besoin de communication. En réalité, j'avais surtout besoin de clarté et de posture. Anaïs m'a aidée à prendre ma place.",
+                                author: "Professionnelle de l'immobilier"
+                            }
+                        ].map((t, i) => (
+                             <Reveal key={i} delay={i*0.2}>
+                                <div className="bg-white/[0.02] p-8 border border-white/5 hover:border-amber/20 transition-colors h-full flex flex-col">
+                                    <div className="text-amber text-2xl mb-4 font-serif">“</div>
+                                    <p className="text-lilac/70 font-sans font-light italic mb-6 flex-grow leading-relaxed">{t.text}</p>
+                                    <div className="mt-auto pt-4 border-t border-white/5 flex items-center gap-3">
+                                        <div className="w-1 h-1 bg-amber rounded-full"></div>
+                                        <span className="text-[10px] font-manifesto uppercase tracking-widest text-cream">{t.author}</span>
+                                    </div>
+                                </div>
+                             </Reveal>
+                        ))}
+                    </div>
+                </div>
+            </section>
+        );
+
         const ThreeDoors = ({ onSelect }) => {
             return (
-                <section className="relative min-h-screen flex items-center justify-center bg-[#0a0a0a] py-20 px-4 md:px-8">
+                <div className="relative bg-[#0a0a0a]">
                      {/* Ambient Light */}
                     <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-64 bg-amber/10 blur-[100px] pointer-events-none"></div>
 
-                    <div className="relative z-10 max-w-[1400px] mx-auto w-full">
-                        <div className="text-center mb-20 space-y-6">
-                            <motion.div 
-                                initial={{ opacity: 0, scale: 0.8 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                transition={{ duration: 1 }}
-                                className="inline-block"
-                            >
-                                <Star8 className="w-6 h-6 text-amber mx-auto mb-6" />
-                            </motion.div>
-                            <h2 className="text-4xl md:text-7xl font-serif text-cream tracking-tight">Les Trois Piliers</h2>
-                            <p className="text-lilac/40 font-sans font-light uppercase tracking-widest text-xs">Choisissez votre voie</p>
-                        </div>
+                    <Manifesto />
 
+                    <div className="relative z-10 max-w-[1400px] mx-auto w-full px-4 md:px-8 pb-20">
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-                            {/* REORDERED: I: TRANSMISSION, II: ORIGINE, III: PARTENAIRE */}
                             <DoorCard 
                                 number="I"
                                 title="TRANSMISSION"
@@ -383,9 +431,9 @@
                             />
                             <DoorCard 
                                 number="II"
-                                title="ORIGINE"
+                                title="ORIGIN"
                                 subtitle="S'aligner & Incarner"
-                                description="Pour celles qui sentent qu’un réalignement profond est nécessaire. Reprendre le pouvoir. Créer depuis ta vérité."
+                                description="L'initiation fondatrice. Revenir à ta souveraineté. Créer depuis ta vérité."
                                 list={["Posture", "Identité", "Vision"]}
                                 cta="S'aligner"
                                 delay={0.4}
@@ -393,9 +441,9 @@
                             />
                             <DoorCard 
                                 number="III"
-                                title="PARTENAIRE"
+                                title="PARTNER"
                                 subtitle="Structurer & Déléguer"
-                                description="Ton bras droit stratégique. On remplace le flou par un pilotage clair. Pour les entrepreneures prêtes à bâtir."
+                                description="Le pacte stratégique. Ton bras droit pour structurer, piloter et déployer sans te perdre."
                                 list={["Vision", "Exécution", "Croissance"]}
                                 cta="Se faire épauler"
                                 delay={0.6}
@@ -403,29 +451,46 @@
                             />
                         </div>
                     </div>
-                </section>
+
+                    <Testimonials />
+                </div>
             );
         };
 
         const DetailContent = ({ type, onBack }) => {
             const content = {
                 transmission: {
-                    title: "TRANSMISSION",
-                    sub: "Savoir",
-                    text: "Pour avancer en autonomie. Moodigital met à disposition ses outils, ses méthodes et sa vision.",
-                    items: ["Canva Mood", "Carnets Business", "Masterclasses"]
+                    title: "TRANSMISSIONS",
+                    sub: "Autonomie & Savoir",
+                    text: "Pour celles qui veulent avancer en autonomie, intégrer à leur rythme, et ancrer dans la matière.",
+                    intro: "Moodigital met à disposition ses outils, ses méthodes et sa vision à travers des formations ciblées.",
+                    items: [
+                        { t: "Canva Mood", d: "Formation Design & Templates pour être autonome sur ton image." },
+                        { t: "Carnets Business", d: "Méthodologie pour revenir à soi et structurer sa pensée." },
+                        { t: "Programmes Courts", d: "Focus stratégie et incarnation." }
+                    ]
                 },
                 origin: {
-                    title: "ORIGINE",
-                    sub: "Alignement",
-                    text: "Reprendre le pouvoir. Créer depuis ta vérité. Avant la stratégie, il y a l'identité.",
-                    items: ["Posture de CEO", "Identité Radicale", "Vision Claire"]
+                    title: "ORIGIN",
+                    sub: "L'Initiation Fondatrice",
+                    text: "Pour les femmes qui sentent que leur posture n'est plus juste, ou qui doivent se retrouver avant de déployer.",
+                    intro: "Revenir à ta souveraineté. Incarner pleinement ton business. Créer depuis ta vérité.",
+                    items: [
+                        { t: "Transformation Identitaire", d: "Avant la stratégie, il y a l'identité. Qui es-tu quand tu diriges ?" },
+                        { t: "Posture de CEO", d: "Sortir de l'exécution pour incarner le leadership." },
+                        { t: "Vision & Alignement", d: "Tracer la route avec clarté, sans se trahir." }
+                    ]
                 },
                 partner: {
-                    title: "PARTENAIRE",
-                    sub: "Structure",
-                    text: "Ton bras droit stratégique. On remplace le flou par un pilotage clair et ambitieux.",
-                    items: ["Direction Stratégique", "Recrutement", "Systèmes"]
+                    title: "PARTNER",
+                    sub: "Le Pacte Stratégique",
+                    text: "Structurer, piloter et déployer sans te perdre. Un vrai bras droit stratégique.",
+                    intro: "Ici, on ne vend pas du temps. On vend de la vision, de l'arbitrage et de la structure.",
+                    items: [
+                        { t: "Vision & Arbitrage", d: "Je porte la vision stratégique avec toi." },
+                        { t: "Exécution Ciblée", d: "Mon équipe déploie l'opérationnel (Chiara)." },
+                        { t: "Engagement", d: "Un pacte sur la durée pour bâtir." }
+                    ]
                 }
             };
             
@@ -446,8 +511,11 @@
                             transition={{ duration: 1 }}
                         >
                             <span className="font-manifesto text-amber text-sm tracking-widest uppercase block mb-6">{data.sub}</span>
-                            <h2 className="text-6xl md:text-9xl font-serif text-cream mb-8 leading-[0.9]">{data.title}</h2>
-                            <p className="text-xl md:text-2xl text-lilac/70 font-light font-sans leading-relaxed max-w-lg">
+                            <h2 className="text-5xl md:text-8xl font-serif text-cream mb-8 leading-[0.9]">{data.title}</h2>
+                            <p className="text-xl md:text-2xl text-lilac/80 font-serif italic leading-relaxed max-w-lg mb-8">
+                                "{data.intro}"
+                            </p>
+                            <p className="text-lilac/60 font-sans font-light">
                                 {data.text}
                             </p>
                         </motion.div>
@@ -456,10 +524,12 @@
                             initial={{ opacity: 0, scale: 0.95 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ duration: 1, delay: 0.2 }}
-                            className="relative h-[500px] border border-white/10 bg-white/5 overflow-hidden group"
+                            className="relative h-[400px] lg:h-auto border border-white/10 bg-white/5 overflow-hidden flex items-center justify-center"
                         >
-                            <div className="absolute inset-0 bg-gradient-to-tr from-amber/10 via-transparent to-transparent opacity-50 group-hover:opacity-80 transition-opacity duration-700"></div>
-                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 border border-amber/20 rounded-full group-hover:scale-110 transition-transform duration-[2s]"></div>
+                            <div className="text-center p-8">
+                                <Star8 className="w-12 h-12 text-amber mx-auto mb-6 opacity-50" />
+                                <p className="font-manifesto text-2xl md:text-4xl text-white/20 uppercase tracking-widest">Incarner<br/>la Matière</p>
+                            </div>
                         </motion.div>
                     </div>
 
@@ -471,10 +541,10 @@
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
                                 transition={{ delay: 0.1 * i }}
-                                className="bg-[#0A0A0A] p-8 border-l border-amber/30"
+                                className="bg-[#0A0A0A] p-8 border-l border-amber/30 hover:bg-white/[0.02] transition-colors"
                             >
-                                <h4 className="font-serif text-2xl text-cream mb-2">{item}</h4>
-                                <p className="text-lilac/40 text-sm font-sans">Module détaillé et accompagnement.</p>
+                                <h4 className="font-serif text-2xl text-cream mb-4">{item.t}</h4>
+                                <p className="text-lilac/60 text-sm font-sans font-light leading-relaxed">{item.d}</p>
                             </motion.div>
                         ))}
                     </div>
@@ -482,20 +552,50 @@
                     {type === 'partner' && (
                         <div className="mt-32">
                             <h3 className="font-serif text-4xl text-center mb-16">Les Offres Partner</h3>
-                            <div className="space-y-4">
-                                {['Essential', 'Growth', 'Expansion'].map((lvl) => (
-                                    <div key={lvl} className="flex flex-col md:flex-row justify-between items-center py-8 border-b border-white/10 hover:bg-white/5 transition-colors px-4">
-                                        <span className="font-manifesto text-2xl uppercase w-48">{lvl}</span>
-                                        <span className="text-lilac/60 font-sans font-light flex-1 text-center md:text-left">Accompagnement mensuel et stratégie.</span>
-                                        <Button variant="outline" className="mt-4 md:mt-0 py-2 px-6 text-[10px]">Découvrir</Button>
-                                    </div>
+                            <div className="space-y-6">
+                                {[
+                                    {
+                                        name: "ESSENTIAL",
+                                        tag: "Structurer l'essentiel",
+                                        desc: "Pour solopreneures lancées. Business stable mais désorganisé. Inclus : 1 débrief stratégique/mois + Exécution ciblée.",
+                                        target: "Moins de charge mentale. Plus de clarté."
+                                    },
+                                    {
+                                        name: "GROWTH",
+                                        tag: "Structurer pour grandir",
+                                        desc: "Pour entrepreneures en croissance. Premières équipes. Inclus : Vision & Stratégie mensuelle + Suivi poussé + Exécution renforcée.",
+                                        target: "Croissance maîtrisée. Organisation solide."
+                                    },
+                                    {
+                                        name: "EXPANSION",
+                                        tag: "Piloter à grande échelle",
+                                        desc: "Pour marques établies. CA solide. Inclus : Pilotage stratégique complet + Vision long terme + Délégation.",
+                                        target: "Sérénité absolue. Expansion alignée."
+                                    }
+                                ].map((lvl, idx) => (
+                                    <Reveal key={idx} delay={idx * 0.1}>
+                                        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center p-8 border border-white/5 bg-white/[0.01] hover:border-amber/30 transition-all">
+                                            <div className="mb-4 lg:mb-0 lg:w-1/4">
+                                                <span className="font-serif text-3xl text-cream block mb-1">{lvl.name}</span>
+                                                <span className="font-manifesto text-[10px] text-amber uppercase tracking-widest">{lvl.tag}</span>
+                                            </div>
+                                            <div className="mb-4 lg:mb-0 lg:w-1/2 px-0 lg:px-8">
+                                                <p className="text-lilac/70 font-sans font-light text-sm leading-relaxed mb-2">{lvl.desc}</p>
+                                                <p className="text-white/40 text-xs uppercase tracking-wide">Résultat : {lvl.target}</p>
+                                            </div>
+                                            <div className="lg:w-1/4 flex justify-end">
+                                                <Button variant="outline" className="py-3 px-6 text-[10px] w-full lg:w-auto">Candidater</Button>
+                                            </div>
+                                        </div>
+                                    </Reveal>
                                 ))}
                             </div>
                         </div>
                     )}
                     
-                    <div className="mt-32 text-center pb-20">
-                        <Button className="w-full md:w-auto">Candidater maintenant</Button>
+                    <div className="mt-32 text-center pb-20 space-y-8">
+                        <p className="font-serif italic text-2xl text-lilac/50">"Tout commence par un appel d'orientation."</p>
+                        <Button className="w-full md:w-auto">Demander un appel</Button>
                     </div>
                 </div>
             );
@@ -504,25 +604,32 @@
         const Footer = () => {
             const currentYear = new Date().getFullYear();
             return (
-                <footer className="fixed bottom-0 left-0 w-full z-0 bg-[#050505] py-12 px-6 border-t border-white/5 h-[400px] flex flex-col justify-center">
+                <footer className="fixed bottom-0 left-0 w-full z-0 bg-[#050505] py-12 px-6 border-t border-white/5 h-[450px] flex flex-col justify-center">
                     <div className="max-w-7xl mx-auto w-full relative">
                         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 mb-12">
                             <div className="md:col-span-4 space-y-6">
                                 <div className="flex items-center gap-3">
                                     <Star8 className="w-5 h-5 text-amber" />
-                                    <span className="font-serif text-2xl text-cream tracking-tight">MOODIGITAL</span>
+                                    <span className="font-serif text-2xl text-cream tracking-tight">mooddigital.co</span>
                                 </div>
                                 <p className="text-lilac/50 font-sans font-light text-sm max-w-xs leading-relaxed">
-                                    Stratégie & Incarnation. <br/>
+                                    Une Maison de stratégie et d’incarnation business.<br/>
                                     Structurer sans s'éteindre.
                                 </p>
+                                <div className="pt-4">
+                                    <p className="font-manifesto text-[10px] tracking-manifesto text-amber uppercase mb-2">L'Initiatrice</p>
+                                    <p className="text-lilac/60 font-sans text-sm font-light">
+                                        Anaïs. Stratège d’incarnation.
+                                        <br/>"Je ne promets pas des résultats rapides. Je transmets une posture durable."
+                                    </p>
+                                </div>
                             </div>
 
                             <div className="md:col-span-2 md:col-start-7">
                                 <h3 className="text-[10px] font-manifesto tracking-manifesto text-metal uppercase mb-4">L'Ordre</h3>
                                 <ul className="space-y-2 text-lilac/40 font-sans text-xs font-light uppercase tracking-wide">
-                                    <li><a href="#" className="hover:text-amber transition-colors">Origine</a></li>
-                                    <li><a href="#" className="hover:text-amber transition-colors">Partenaire</a></li>
+                                    <li><a href="#" className="hover:text-amber transition-colors">Origin</a></li>
+                                    <li><a href="#" className="hover:text-amber transition-colors">Partner</a></li>
                                     <li><a href="#" className="hover:text-amber transition-colors">Transmission</a></li>
                                 </ul>
                             </div>
@@ -604,7 +711,7 @@
                 <div className="bg-black min-h-screen">
                     {/* Fixed Logo/Nav */}
                     <nav className="fixed top-0 left-0 w-full z-50 px-6 py-6 mix-blend-difference">
-                        <div className="font-serif text-xl tracking-tight text-white font-bold cursor-pointer" onClick={() => window.location.reload()}>MOODIGITAL</div>
+                        <div className="font-serif text-xl tracking-tight text-white font-bold cursor-pointer" onClick={() => window.location.reload()}>mooddigital.co</div>
                     </nav>
 
                     <GrandDoors isOpen={doorsAreSeparated} />
@@ -617,7 +724,7 @@
                     <main 
                         className="relative z-10 bg-earth shadow-2xl transition-colors duration-1000"
                         style={{ 
-                            marginBottom: '400px', // For fixed footer reveal
+                            marginBottom: '450px', // For fixed footer reveal
                             minHeight: '100vh',
                             backgroundColor: view === 'hero' ? '#6B3F24' : '#0a0a0a' 
                         }} 
