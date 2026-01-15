@@ -101,12 +101,25 @@
             background-size: 200px 200px, 100% 100%;
         }
 
+        .stone-texture {
+             background-color: #F4F1EC;
+             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.15'/%3E%3C/svg%3E");
+        }
+
         /* Paneling effect via CSS */
         .door-panel {
             box-shadow: 
                 inset 2px 2px 0px rgba(255, 255, 255, 0.05),
                 inset -2px -2px 0px rgba(0, 0, 0, 0.5),
                 0 10px 20px rgba(0,0,0,0.5);
+        }
+        
+        .hide-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+        .hide-scrollbar {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
         }
     </style>
 
@@ -135,14 +148,27 @@
             </svg>
         );
 
-        // --- COMPONENTS ---
-        const Button = ({ children, onClick, className }) => (
-            <button onClick={onClick} className={cn("relative overflow-hidden inline-flex items-center justify-center px-12 py-5 text-xs font-semibold tracking-widest transition-all duration-300 border font-sans cursor-pointer uppercase rounded-none bg-amber text-cream border-amber hover:bg-earth hover:border-earth hover:text-white group z-10", className)}>
-                <span className="relative z-10 flex items-center gap-3">
-                    {children}
-                </span>
-            </button>
+        const ArrowLeft = ({ className }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="square" strokeLinejoin="miter" className={className}><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
         );
+
+        // --- COMPONENTS ---
+        const Button = ({ children, onClick, className, variant = "primary" }) => {
+            const base = "relative overflow-hidden inline-flex items-center justify-center px-8 md:px-12 py-4 md:py-5 text-xs font-semibold tracking-widest transition-all duration-300 border font-sans cursor-pointer uppercase rounded-none group z-10";
+            const styles = {
+                primary: "bg-amber text-cream border-amber hover:bg-earth hover:border-earth hover:text-white",
+                outline: "bg-transparent text-cream border-white/20 hover:border-amber hover:text-amber",
+                ghost: "bg-transparent text-lilac/70 hover:text-amber border-transparent hover:bg-white/5"
+            };
+            
+            return (
+                <button onClick={onClick} className={cn(base, styles[variant], className)}>
+                    <span className="relative z-10 flex items-center gap-3">
+                        {children}
+                    </span>
+                </button>
+            );
+        };
 
         const Reveal = ({ children, delay = 0 }) => (
             <motion.div
@@ -156,7 +182,50 @@
             </motion.div>
         );
 
-        // --- DOOR COMPONENT ---
+        // --- ANIMATIONS ---
+        
+        // The Greek Pillar Transition
+        const PillarTransition = ({ onComplete }) => {
+            return (
+                <motion.div 
+                    initial={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.5, delay: 1 }} // Fade out after pillars rise
+                    className="fixed inset-0 z-[200] pointer-events-none flex items-end justify-center"
+                >
+                    {/* Background Dim */}
+                    <motion.div 
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+                    />
+
+                    {/* The Pillars (Flutes) */}
+                    <div className="relative z-10 w-full max-w-lg h-full flex justify-between px-4 md:px-0">
+                         {[0, 1, 2, 3, 4].map((i) => (
+                            <motion.div
+                                key={i}
+                                initial={{ height: "0%" }}
+                                animate={{ height: "100%" }}
+                                transition={{ 
+                                    duration: 0.8, 
+                                    delay: i * 0.05, 
+                                    ease: [0.22, 1, 0.36, 1] 
+                                }}
+                                onAnimationComplete={() => {
+                                    if (i === 4 && onComplete) onComplete();
+                                }}
+                                className="w-[18%] stone-texture relative shadow-[0_0_30px_rgba(0,0,0,0.5)] border-x border-black/10"
+                            >
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-white/20"></div>
+                            </motion.div>
+                         ))}
+                    </div>
+                </motion.div>
+            );
+        };
+
+        // --- DOOR COMPONENT (Landing) ---
         const GrandDoors = ({ isOpen, onOpenComplete }) => {
             return (
                 <div className="fixed inset-0 z-[100] pointer-events-none flex items-center justify-center">
@@ -164,21 +233,17 @@
                     <motion.div
                         initial={{ x: "-100%" }}
                         animate={{ x: isOpen ? "-100%" : "0%" }}
-                        transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1] }} // Slow, heavy door feel
+                        transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1] }} 
                         className="absolute left-0 top-0 w-1/2 h-full wood-texture flex items-center justify-end border-r border-black"
                         style={{ perspective: '1000px' }}
                     >
-                        {/* Door Detailing (Panels) */}
                         <div className="w-full h-full p-4 md:p-12 grid grid-rows-3 gap-8 opacity-90">
                             <div className="door-panel border border-white/5 bg-black/20 rounded-sm"></div>
                             <div className="door-panel border border-white/5 bg-black/20 rounded-sm flex items-center justify-center">
-                                {/* Decorative Element */}
                                 <div className="w-24 h-24 rounded-full border border-white/5 opacity-20"></div>
                             </div>
                             <div className="door-panel border border-white/5 bg-black/20 rounded-sm"></div>
                         </div>
-                        
-                        {/* Handle */}
                         <div className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 w-2 md:w-4 h-32 md:h-48 bg-gradient-to-b from-amber/80 to-amber/40 rounded-full shadow-[0_0_15px_rgba(224,122,47,0.3)] border border-white/10"></div>
                     </motion.div>
 
@@ -190,21 +255,16 @@
                         onAnimationComplete={() => isOpen && onOpenComplete && onOpenComplete()}
                         className="absolute right-0 top-0 w-1/2 h-full wood-texture flex items-center justify-start border-l border-black"
                     >
-                        {/* Door Detailing (Panels) */}
                         <div className="w-full h-full p-4 md:p-12 grid grid-rows-3 gap-8 opacity-90">
                             <div className="door-panel border border-white/5 bg-black/20 rounded-sm"></div>
                             <div className="door-panel border border-white/5 bg-black/20 rounded-sm flex items-center justify-center">
-                                 {/* Decorative Element */}
                                  <div className="w-24 h-24 rounded-full border border-white/5 opacity-20"></div>
                             </div>
                             <div className="door-panel border border-white/5 bg-black/20 rounded-sm"></div>
                         </div>
-
-                        {/* Handle */}
                         <div className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 w-2 md:w-4 h-32 md:h-48 bg-gradient-to-b from-amber/80 to-amber/40 rounded-full shadow-[0_0_15px_rgba(224,122,47,0.3)] border border-white/10"></div>
                     </motion.div>
 
-                    {/* Center Light Crack (Only visible when closed) */}
                     {!isOpen && (
                         <motion.div 
                             initial={{ opacity: 0 }}
@@ -223,7 +283,6 @@
             return (
                 <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-earth">
                     <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-earth/80 to-black z-10"></div>
-                    {/* Background visual just to give depth behind text */}
                     <div className="absolute inset-0 opacity-20 bg-[url('https://images.unsplash.com/photo-1542259646-173663b65261?q=80&w=2544&auto=format&fit=crop')] bg-cover bg-center mix-blend-overlay"></div>
                     
                     <div className="relative z-20 text-center w-full max-w-6xl px-4 flex flex-col items-center justify-center h-full">
@@ -255,9 +314,9 @@
             );
         };
 
-        const DoorCard = ({ number, title, subtitle, description, list, cta, delay }) => (
+        const DoorCard = ({ number, title, subtitle, description, list, cta, delay, onClick }) => (
             <Reveal delay={delay}>
-                <div className="group relative border border-white/5 bg-black/60 backdrop-blur-sm p-8 h-full hover:border-amber/50 transition-all duration-700 flex flex-col justify-between hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)]">
+                <div onClick={onClick} className="cursor-pointer group relative border border-white/5 bg-black/60 backdrop-blur-sm p-8 h-full hover:border-amber/50 transition-all duration-700 flex flex-col justify-between hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)]">
                     <div>
                         <div className="flex justify-between items-start mb-8">
                             <span className="font-manifesto text-5xl text-white/10 group-hover:text-amber/20 transition-colors duration-500">{number}</span>
@@ -293,7 +352,7 @@
             </Reveal>
         );
 
-        const ThreeDoors = () => {
+        const ThreeDoors = ({ onSelect }) => {
             return (
                 <section className="relative min-h-screen flex items-center justify-center bg-[#0a0a0a] py-20 px-4 md:px-8">
                      {/* Ambient Light */}
@@ -309,40 +368,242 @@
                             >
                                 <Star8 className="w-6 h-6 text-amber mx-auto mb-6" />
                             </motion.div>
-                            <h2 className="text-4xl md:text-7xl font-serif text-cream tracking-tight">Les Trois Passages</h2>
+                            <h2 className="text-4xl md:text-7xl font-serif text-cream tracking-tight">Les Trois Piliers</h2>
                             <p className="text-lilac/40 font-sans font-light uppercase tracking-widest text-xs">Choisissez votre voie</p>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+                             {/* ORDER: 1. Transmission, 2. Origine, 3. Partenaire */}
                             <DoorCard 
                                 number="I"
-                                title="ORIGINE"
-                                subtitle="S'aligner & Incarner"
-                                description="Pour celles qui sentent qu’un réalignement profond est nécessaire. Reprendre le pouvoir. Créer depuis ta vérité."
-                                list={["Posture", "Identité", "Vision"]}
-                                cta="S'aligner"
-                                delay={0.2}
-                            />
-                            <DoorCard 
-                                number="II"
-                                title="PARTENAIRE"
-                                subtitle="Structurer & Déléguer"
-                                description="Ton bras droit stratégique. On remplace le flou par un pilotage clair. Pour les entrepreneures prêtes à bâtir."
-                                list={["Vision", "Exécution", "Croissance"]}
-                                cta="Se faire épauler"
-                                delay={0.4}
-                            />
-                            <DoorCard 
-                                number="III"
                                 title="TRANSMISSION"
                                 subtitle="Autonomie & Savoir"
                                 description="Pour avancer en autonomie, à son rythme. Formations, carnets business et programmes courts."
                                 list={["Canva Mood", "Carnets", "Masterclasses"]}
                                 cta="Explorer"
+                                delay={0.2}
+                                onClick={() => onSelect('transmission')}
+                            />
+                            <DoorCard 
+                                number="II"
+                                title="ORIGINE"
+                                subtitle="S'aligner & Incarner"
+                                description="Pour celles qui sentent qu’un réalignement profond est nécessaire. Reprendre le pouvoir. Créer depuis ta vérité."
+                                list={["Posture", "Identité", "Vision"]}
+                                cta="S'aligner"
+                                delay={0.4}
+                                onClick={() => onSelect('origin')}
+                            />
+                            <DoorCard 
+                                number="III"
+                                title="PARTENAIRE"
+                                subtitle="Structurer & Déléguer"
+                                description="Ton bras droit stratégique. On remplace le flou par un pilotage clair. Pour les entrepreneures prêtes à bâtir."
+                                list={["Vision", "Exécution", "Croissance"]}
+                                cta="Se faire épauler"
                                 delay={0.6}
+                                onClick={() => onSelect('partner')}
                             />
                         </div>
                     </div>
+                </section>
+            );
+        };
+
+        const PartnerRow = ({ title, sub, target, result, delay }) => (
+            <Reveal delay={delay}>
+                <div className="border-t border-white/10 py-10 md:py-16 group hover:bg-white/[0.02] transition-colors w-full">
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 px-2 md:px-4">
+                        <div className="lg:col-span-4">
+                            <h4 className="text-3xl md:text-4xl font-serif text-cream group-hover:text-amber transition-colors tracking-tight mb-2 break-words">{title}</h4>
+                            <p className="text-[10px] font-manifesto text-lilac/40 tracking-manifesto uppercase">{sub}</p>
+                        </div>
+                        <div className="lg:col-span-4">
+                            <p className="text-[10px] font-manifesto text-amber mb-2 md:mb-4 tracking-manifesto uppercase">Pour qui</p>
+                            <p className="text-lilac font-sans font-light leading-relaxed max-w-sm text-sm md:text-base">{target}</p>
+                        </div>
+                        <div className="lg:col-span-4">
+                            <p className="text-[10px] font-manifesto text-amber mb-2 md:mb-4 tracking-manifesto uppercase">Résultat</p>
+                            <p className="text-cream font-sans font-light leading-relaxed max-w-sm text-sm md:text-base">{result}</p>
+                        </div>
+                    </div>
+                </div>
+            </Reveal>
+        );
+
+        const DetailView = ({ type, onBack }) => {
+            // Render content based on type
+            const renderContent = () => {
+                switch(type) {
+                    case 'transmission':
+                        return (
+                            <div className="max-w-[1400px] mx-auto px-4 md:px-6 py-20">
+                                <Reveal>
+                                    <div className="text-center mb-16 md:mb-24">
+                                        <div className="inline-flex items-center gap-2 text-amber mb-6">
+                                             <Star8 className="w-3 h-3" />
+                                             <span className="font-manifesto text-[10px] tracking-manifesto uppercase">Pilier I</span>
+                                             <Star8 className="w-3 h-3" />
+                                        </div>
+                                        <h2 className="text-6xl md:text-9xl font-serif text-cream mb-6 tracking-tightest">TRANSMISSION</h2>
+                                        <p className="text-xl md:text-2xl text-lilac/70 font-serif italic">Autonomie & Savoir</p>
+                                    </div>
+                                </Reveal>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-24 items-center">
+                                    <Reveal delay={0.2}>
+                                        <div className="bg-white/[0.02] border border-white/5 p-8 md:p-12">
+                                            <h3 className="font-serif text-3xl md:text-4xl text-cream mb-6">L'accès à la connaissance</h3>
+                                            <p className="text-lilac/80 font-sans font-light leading-relaxed mb-8">
+                                                Pour avancer en autonomie, à son rythme. Moodigital met à disposition ses outils, ses méthodes et sa vision à travers des formations ciblées et des ressources exclusives.
+                                            </p>
+                                            <ul className="space-y-4">
+                                                <li className="flex items-start gap-3">
+                                                    <span className="text-amber mt-1">✦</span>
+                                                    <span className="text-cream font-sans font-light">Canva Mood — Templates & Design</span>
+                                                </li>
+                                                <li className="flex items-start gap-3">
+                                                    <span className="text-amber mt-1">✦</span>
+                                                    <span className="text-cream font-sans font-light">Carnets Business — Méthodologie</span>
+                                                </li>
+                                                <li className="flex items-start gap-3">
+                                                    <span className="text-amber mt-1">✦</span>
+                                                    <span className="text-cream font-sans font-light">Programmes Courts — Focus Stratégie</span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </Reveal>
+                                    <Reveal delay={0.4}>
+                                        <div className="relative aspect-square md:aspect-[4/5] overflow-hidden bg-black/50 border border-white/5 flex items-center justify-center">
+                                             <div className="absolute inset-0 bg-gradient-to-tr from-amber/20 to-transparent mix-blend-overlay"></div>
+                                             <p className="font-manifesto text-6xl md:text-8xl text-white/5 uppercase break-all px-8 text-center leading-none">Knowledge is Power</p>
+                                        </div>
+                                    </Reveal>
+                                </div>
+                            </div>
+                        );
+                    case 'origin':
+                        return (
+                            <div className="max-w-[1400px] mx-auto px-4 md:px-6 py-20">
+                                <Reveal>
+                                    <div className="text-center mb-16 md:mb-24">
+                                        <div className="inline-flex items-center gap-2 text-amber mb-6">
+                                             <Star8 className="w-3 h-3" />
+                                             <span className="font-manifesto text-[10px] tracking-manifesto uppercase">Pilier II</span>
+                                             <Star8 className="w-3 h-3" />
+                                        </div>
+                                        <h2 className="text-6xl md:text-9xl font-serif text-cream mb-6 tracking-tightest">ORIGINE</h2>
+                                        <p className="text-xl md:text-2xl text-lilac/70 font-serif italic">S'aligner & Incarner</p>
+                                    </div>
+                                </Reveal>
+
+                                <div className="grid grid-cols-1 md:grid-cols-12 gap-12 items-start">
+                                    <div className="md:col-span-5">
+                                        <Reveal delay={0.2}>
+                                            <h3 className="font-serif text-4xl md:text-5xl text-cream mb-8 leading-tight">
+                                                Reprendre le pouvoir.<br/>
+                                                <span className="text-amber italic">Créer depuis ta vérité.</span>
+                                            </h3>
+                                            <p className="text-lilac font-sans font-light leading-relaxed text-lg mb-8">
+                                                Pour celles qui sentent qu’un réalignement profond est nécessaire. 
+                                                Avant la stratégie, il y a l'identité. Avant la vente, il y a la posture.
+                                            </p>
+                                            <Button variant="outline">Candidater pour Origine</Button>
+                                        </Reveal>
+                                    </div>
+                                    <div className="md:col-span-1"></div>
+                                    <div className="md:col-span-6 space-y-6">
+                                        {[
+                                            { t: "Posture", d: "Incarner sa place de CEO. Sortir de l'exécution pour diriger." },
+                                            { t: "Identité Business", d: "Une marque qui ne ressemble à personne d'autre. Radicale. Unique." },
+                                            { t: "Vision", d: "Savoir exactement où l'on va. Tracer la route avec clarté." }
+                                        ].map((item, i) => (
+                                            <Reveal key={i} delay={0.3 + (i * 0.1)}>
+                                                <div className="border border-white/10 p-6 hover:border-amber/50 transition-colors bg-black/20">
+                                                    <h4 className="font-manifesto text-xl text-cream mb-2 uppercase">{item.t}</h4>
+                                                    <p className="text-lilac/60 font-sans font-light text-sm">{item.d}</p>
+                                                </div>
+                                            </Reveal>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        );
+                    case 'partner':
+                        return (
+                             <div className="max-w-[1400px] mx-auto px-4 md:px-6 py-20">
+                                <Reveal>
+                                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 mb-20 md:mb-32">
+                                        <div>
+                                            <div className="inline-flex items-center gap-3 mb-6 md:mb-8 text-amber">
+                                                <Star8 className="w-3 h-3" />
+                                                <span className="font-manifesto text-[10px] tracking-manifesto uppercase">Pilier III — Le Bras Droit</span>
+                                            </div>
+                                            <h2 className="text-6xl md:text-8xl font-serif tracking-tightest mb-8 md:mb-10 leading-[0.9] break-words">
+                                                MOOD <br/> <span className="italic text-lilac/50">PARTNER</span>
+                                            </h2>
+                                            <p className="text-lg md:text-xl text-lilac font-sans font-light max-w-md leading-relaxed">
+                                                Ici, on ne vend pas du temps. On vend de la vision, de l'arbitrage et de la structure.
+                                                <br/><br/>
+                                                C'est un pacte sur la durée pour celles qui sont prêtes à lâcher l'opérationnel pour reprendre le pilotage.
+                                            </p>
+                                        </div>
+                                        <div className="bg-black/20 p-8 md:p-12 border border-white/5 backdrop-blur-sm self-start lg:self-end w-full">
+                                            <h5 className="font-manifesto text-amber mb-4 md:mb-6 tracking-manifesto text-xs uppercase">Règle d'or</h5>
+                                            <p className="italic text-cream font-serif text-2xl md:text-3xl leading-tight mb-4 md:mb-6">
+                                                "La posture précède toujours la stratégie. Ce cadre est là pour te protéger."
+                                            </p>
+                                            <p className="text-xs md:text-sm font-sans text-lilac/60 uppercase tracking-widest">
+                                                — Engagement minimum requis.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </Reveal>
+
+                                <div className="border-b border-white/10 mb-16 md:mb-24">
+                                    <PartnerRow 
+                                        title="ESSENTIAL"
+                                        sub="Structurer l'essentiel"
+                                        target="Solopreneures lancées. Business stable mais désorganisé."
+                                        result="Moins de charge mentale. Plus de clarté."
+                                        delay={0}
+                                    />
+                                    <PartnerRow 
+                                        title="GROWTH"
+                                        sub="Structurer pour grandir"
+                                        target="Entrepreneures en croissance. Premières équipes ou délégation."
+                                        result="Croissance maîtrisée. Organisation solide."
+                                        delay={0.1}
+                                    />
+                                    <PartnerRow 
+                                        title="EXPANSION"
+                                        sub="Piloter à grande échelle"
+                                        target="Marques établies. CA solide. Besoin d'un vrai bras droit."
+                                        result="Sérénité absolue. Expansion alignée."
+                                        delay={0.2}
+                                    />
+                                </div>
+                                
+                                <div className="flex justify-center">
+                                     <Button>Candidater pour Partner</Button>
+                                </div>
+                            </div>
+                        );
+                    default:
+                        return null;
+                }
+            }
+
+            return (
+                <section className="min-h-screen bg-black relative pt-24 pb-12">
+                    {/* Fixed Back Button */}
+                    <div className="fixed top-24 left-4 md:left-12 z-50">
+                        <button onClick={onBack} className="flex items-center gap-2 text-lilac/50 hover:text-amber transition-colors font-manifesto uppercase tracking-widest text-xs">
+                            <ArrowLeft className="w-4 h-4" /> Retour
+                        </button>
+                    </div>
+
+                    {renderContent()}
                 </section>
             );
         };
@@ -395,60 +656,62 @@
         };
 
         const App = () => {
-            const [view, setView] = useState('hero'); // 'hero' or 'doors'
-            const [doorState, setDoorState] = useState('open'); // 'open' (initially open to show hero), 'closing', 'closed', 'opening'
-            
-            // Logic:
-            // 1. Initial Load: Hero is visible, Doors are OPEN (hidden on sides).
-            // 2. User clicks "Enter": DoorState -> 'closing' (Doors slide in).
-            // 3. After closing anim: View -> 'doors' (Switch content behind doors). DoorState -> 'opening' (Doors slide out).
+            const [view, setView] = useState('hero'); // 'hero', 'doors', 'detail'
+            const [doorState, setDoorState] = useState('open'); 
+            const [selectedDoorType, setSelectedDoorType] = useState(null); // 'transmission', 'origin', 'partner'
+            const [showPillarAnim, setShowPillarAnim] = useState(false);
             
             const handleEnter = () => {
-                // 1. Close the doors
                 setDoorState('closing');
-                
-                // 2. Wait for close, then switch view and open
                 setTimeout(() => {
                     setView('doors');
                     window.scrollTo(0, 0);
-                    
-                    // Small delay to ensure render
                     setTimeout(() => {
                         setDoorState('opening');
                     }, 100);
-                }, 1500); // 1.5s matches door duration
+                }, 1500); 
             };
 
-            const isDoorsClosedOrClosing = doorState === 'closing' || doorState === 'closed';
-            
-            // Should the doors be visible in the viewport?
-            // They are visible if they are closing, closed, or opening.
-            // If they are fully 'open' and we are just browsing, they are theoretically off-screen, 
-            // but we can keep them mounted with x-offset.
-            
-            // We need to invert the logic for the component prop 'isOpen'
-            // The component `GrandDoors` expects `isOpen` to mean "Are the doors physically separated?"
-            
+            const handleSelectDoor = (type) => {
+                setShowPillarAnim(true);
+                // Wait for pillar up animation (approx 1s)
+                setTimeout(() => {
+                    setSelectedDoorType(type);
+                    setView('detail');
+                    window.scrollTo(0, 0);
+                }, 1200);
+                // Turn off anim after pillars fade out
+                setTimeout(() => {
+                    setShowPillarAnim(false);
+                }, 2000);
+            };
+
+            const handleBack = () => {
+                setView('doors');
+                setSelectedDoorType(null);
+            };
+
             const doorsAreSeparated = doorState === 'open' || doorState === 'opening';
 
             return (
                 <>
                     <GrandDoors isOpen={doorsAreSeparated} />
                     
-                    {/* Main Content with marginBottom for Footer Reveal */}
+                    <AnimatePresence>
+                        {showPillarAnim && <PillarTransition />}
+                    </AnimatePresence>
+
                     <main 
                         className="relative z-10 bg-earth shadow-2xl transition-colors duration-1000"
                         style={{ 
-                            marginBottom: '400px', // Matches fixed footer height
+                            marginBottom: '400px', 
                             minHeight: '100vh',
-                            backgroundColor: view === 'doors' ? '#0a0a0a' : '#6B3F24' 
+                            backgroundColor: view !== 'hero' ? '#0a0a0a' : '#6B3F24' 
                         }} 
                     >
-                        {view === 'hero' ? (
-                            <Hero onEnter={handleEnter} />
-                        ) : (
-                            <ThreeDoors />
-                        )}
+                        {view === 'hero' && <Hero onEnter={handleEnter} />}
+                        {view === 'doors' && <ThreeDoors onSelect={handleSelectDoor} />}
+                        {view === 'detail' && selectedDoorType && <DetailView type={selectedDoorType} onBack={handleBack} />}
                     </main>
                     
                     <Footer />
